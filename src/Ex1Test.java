@@ -1,4 +1,7 @@
 import org.junit.jupiter.api.Test;
+
+import java.util.logging.Logger;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class Ex1Test {
@@ -28,7 +31,27 @@ public class Ex1Test {
 
         System.out.println("Average Rounds: " + averageRounds);
     }
+    @Test
+    public void testAutoSolvingGame() {
+        int totalRounds = 3;
+        int totalWins = 0;
 
+        for (int i = 0; i < totalRounds; i++) {
+            BP_Server game = new BP_Server();
+            game.startGame(123456789L, 2); // Replace with your actual ID and numOfDigits
+            int roundsToWin = Ex1.autoEx1Game(game);
+
+            if (game.getStatus().equals("You won!")) {
+                totalWins++;
+            }
+        }
+
+        assertTrue(totalWins == totalRounds);
+        System.out.println("Number of wins: " + totalWins);
+        logger.info("Number of wins: " + totalWins);
+
+    }
+    private static final Logger logger = Logger.getLogger(Ex1Test.class.getName());
     // Additional test methods for other functionalities in Ex1
     @Test
     public void testAutoEx1Game3Digit() {

@@ -28,8 +28,9 @@ import java.util.Scanner;
  */
 public class Ex1 {
     public static final String Title = "Ex1 demo: manual Bulls & Cows game";
+    private static ArrayList<Integer> SpecialNums = new ArrayList<>();
     public static void main(String[] args) {
-        BP_Server game = new BP_Server();   // Starting the "game-server"
+   BP_Server game = new BP_Server();   // Starting the "game-server"
         long myID = 123456789L;             // Your ID should be written here
         int numOfDigits = 2;                // Number of digits [2,6]
         game.startGame(myID, numOfDigits);  // Starting a game
@@ -46,7 +47,35 @@ public class Ex1 {
 
 
         //manualEx1Game(game);
-        autoEx1Game(game); // you should implement this function )and any additional required functions).
+        // Example usage of HasCommonNumbers
+//        int num1 = 123;
+//        ArrayList<Integer> numbersList = new ArrayList<>();
+//        numbersList.add(100);
+//        numbersList.add(000);
+//        numbersList.add(000);
+//
+//        int numOfDigits2 = 3;
+//
+//        boolean hasCommonNumbers = HasCommonNumbers(num1, numbersList, numOfDigits);
+//
+//        System.out.println("num1: " + num1);
+//        System.out.println("Numbers List: " + numbersList);
+//        System.out.println("Has Common Numbers: " + hasCommonNumbers);
+          autoEx1Game(game); // you should implement this function )and any additional required functions).
+//        int totalTries = 50;
+//        int totalWins = 0;
+//
+//        for (int i = 0; i < totalTries; i++) {
+//            BP_Server game = new BP_Server();
+//            game.startGame(123456789L, 2); // Replace with your actual ID and numOfDigits
+//            int roundsToWin = Ex1.autoEx1Game(game);
+//
+//            if (!game.isRunning()) {
+//                totalWins++;
+//            }
+//        }
+//
+//        System.out.println("Number of wins: " + totalWins);
     }
     public static void manualEx1Game(BP_Server game) {
         Scanner sc = new Scanner(System.in);
@@ -62,6 +91,7 @@ public class Ex1 {
                 if (game.isRunning()) {     // While the game is running
                     System.out.println(ind + ") B: " + res[0] + ",  C: " + res[1]); // Prints the Bulls [0], and the Cows [1]
                     ind += 1;               // Increasing the index
+
                 }
             }
             else {
@@ -116,7 +146,9 @@ public class Ex1 {
         double max = Math.pow(10, numOfDigits);
         ArrayList<Integer> AllNumbers = new ArrayList<>();
         ArrayList<Integer> toRemove = new ArrayList<>();
-        int[] guess = generateGuess(numOfDigits);
+        int[] guess = generateGuess(numOfDigits);ArrayList<Integer> SpecialNums=new ArrayList<>();
+        System.out.println("Guess: "+IntFromArray(guess));
+
         for (int i = 0; i < max; i++) {
             AllNumbers.add(i);
         }
@@ -125,19 +157,24 @@ public class Ex1 {
             int index=AllNumbers.indexOf(IntFromArray(guess));
             AllNumbers.remove(index);
             toRemove = NumberRemover(IntFromArray(guess), numOfDigits, res);
-            System.out.println("toRemove: " + toRemove);
+
             AllNumbers.removeAll(toRemove);
-            System.out.println("AllNumbers size after removal: " + AllNumbers.size());
-            guess = toArrayReverse(getRandomFromWithPriority(AllNumbers, numOfDigits), numOfDigits);
-            System.out.println("New guess: " + Arrays.toString(guess));
+
+            if(!AllNumbers.isEmpty()) guess = toArrayReverse(getRandomFromWithPriority(AllNumbers, numOfDigits), numOfDigits);
+
             if (game.isRunning()) {
                 System.out.println(ind + ") B: " + res[0] + ",  C: " + res[1]);
+                System.out.println("toRemove: " + toRemove);
+
+                System.out.println("AllNumbers size after removal: " + AllNumbers.size());
+                System.out.println("New guess: " + Arrays.toString(guess));
                 ind += 1;
             } else {
                 break;
             }
         }
         System.out.println(game.getStatus());
+
         return ind;
     }
 
@@ -158,15 +195,34 @@ public class Ex1 {
         for (int i = 0; i < max; i++) {
             if (numOfDigits >= 2 && numOfDigits <= 6) {
                 if ((B + C == 0)&&HasCommonNumbers(i,guess,numOfDigits)
-                || ((B == 1 && C == 0) && !HasCommonDigits(i, guess, numOfDigits))
-                || (B == 0 && C == 1 &&!HasCorrectCows(i,guess,numOfDigits))
-                ||(B+C==numOfDigits&&!AreAnagrams(i,guess,numOfDigits))) {
+                        || ((B == 1 && C == 0) && !HasCommonDigits(i, guess, numOfDigits))
+                        || (B == 0 && C == 1 &&!HasCorrectCows(i,guess,numOfDigits))
+                        ||(B+C==numOfDigits&&!AreAnagrams(i,guess,numOfDigits))) {
                     toRemove.add(i);
                 }
+
             }
         }
 
         return toRemove;
+    }
+    public static boolean HasCommonNumbers(int num1, ArrayList <Integer>Numbers,int numOfDigits) {
+         if(Numbers.isEmpty()||Numbers==null)return true;
+        int tempnum=num1;
+
+        for (int i = 0; i <Numbers.size() ; i++) {
+            int count=0;
+            for (int j = 0; j < numOfDigits; j++) {
+                if(HasCommonNumbers(num1%10,Numbers.get(i),numOfDigits))count++;
+                num1=num1/10;
+
+            }
+            if(count==0)return false;
+            num1=tempnum;
+
+
+        }
+        return true;
     }
     private static int countEliminatedOptions(int[] guess, int guessNum, int outcome, ArrayList<Integer> options, int numOfDigits) {
         int eliminated = 0;
