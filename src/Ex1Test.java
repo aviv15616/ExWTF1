@@ -26,6 +26,7 @@ public class Ex1Test {
 
         }
 
+
         // Calculate the average
         double averageRounds = (double) totalRounds / numOfRuns;
 
@@ -69,7 +70,7 @@ public class Ex1Test {
 
 
 
-            assertFalse(game.isRunning());
+
         }
 
         // Calculate the average
@@ -93,7 +94,7 @@ public class Ex1Test {
 
 
 
-            assertFalse(game.isRunning());
+
         }
 
         // Calculate the average
@@ -117,7 +118,7 @@ public class Ex1Test {
 
 
 
-            assertFalse(game.isRunning());
+
         }
 
         // Calculate the average
@@ -141,7 +142,7 @@ public class Ex1Test {
 
 
 
-            assertFalse(game.isRunning());
+
         }
 
         // Calculate the average

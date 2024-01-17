@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
 /**
  * Introduction to Computer Science, Ariel University, Ex1 (manual Example + a Template for your solution)
@@ -30,11 +31,22 @@ public class Ex1 {
     public static final String Title = "Ex1 demo: manual Bulls & Cows game";
     private static ArrayList<Integer> SpecialNums = new ArrayList<>();
     public static void main(String[] args) {
-   BP_Server game = new BP_Server();   // Starting the "game-server"
+        BP_Server game = new BP_Server();   // Starting the "game-server"
         long myID = 123456789L;             // Your ID should be written here
-        int numOfDigits = 2;                // Number of digits [2,6]
+        int numOfDigits = 5;                // Number of digits [2,6]
         game.startGame(myID, numOfDigits);  // Starting a game
-        System.out.println(Title+" with code of "+numOfDigits+" digits");
+        System.out.println(Title + " with code of " + numOfDigits + " digits");
+//        int num1 = 131;
+//        int num2 = 343;
+//
+//
+//        // Test the HowMuchCorrectCows method
+//        int correctCows = HowMuchCorrectCows(num1, num2, numOfDigits);
+//
+//        // Print the result
+//        System.out.println("Number 1: " + num1);
+//        System.out.println("Number 2: " + num2);
+//        System.out.println("Correct Cows: " + correctCows);
 //        ArrayList <Integer> all=new ArrayList<>();
 //        ArrayList <Integer> toRemove=new ArrayList<>();
 //        int[] res={1,1};
@@ -61,22 +73,40 @@ public class Ex1 {
 //        System.out.println("num1: " + num1);
 //        System.out.println("Numbers List: " + numbersList);
 //        System.out.println("Has Common Numbers: " + hasCommonNumbers);
-          autoEx1Game(game); // you should implement this function )and any additional required functions).
-//        int totalTries = 50;
-//        int totalWins = 0;
+        //
+         autoEx1Game(game); // you should implement this function )and any additional required functions).
+        //manualEx1Game((game));
+//        testAreAnagrams(123, 321, 3); // should print "Are Anagrams: true"
+//        testAreAnagrams(123, 456, 3); // should print "Are Anagrams: false"
+//        testAreAnagrams(112, 121, 3); // should print "Are Anagrams: true"
+//    }
 //
-//        for (int i = 0; i < totalTries; i++) {
-//            BP_Server game = new BP_Server();
-//            game.startGame(123456789L, 2); // Replace with your actual ID and numOfDigits
-//            int roundsToWin = Ex1.autoEx1Game(game);
-//
-//            if (!game.isRunning()) {
-//                totalWins++;
-//            }
-//        }
-//
-//        System.out.println("Number of wins: " + totalWins);
+//    public static void testAreAnagrams(int num1, int num2, int numOfDigits) {
+//        boolean result = AreAnagrams(num1, num2, numOfDigits);
+//        System.out.println("Are Anagrams: " + result);
+//    }
+
     }
+
+    // Helper method to convert an array to a string for printing
+
+
+
+
+    public static int SameDigits(int num1,int num2,int numOfDigits) {
+    int count=0;
+        for (int i = 0; i < numOfDigits; i++) {
+            if (num1 % 10 == num2 % 10) count++;
+            num1 /= 10;
+            num2 /= 10;
+        }
+            return count;
+
+        }
+
+
+
+
     public static void manualEx1Game(BP_Server game) {
         Scanner sc = new Scanner(System.in);
         int ind=1;      // Index of the guess
@@ -108,14 +138,14 @@ public class Ex1 {
      * @param size  - number of digits (to handle the 00 case).
      * @return an array of digits
      */
-    private static int[] toArray(int a, int size){
-        int[] c = new int[size];
-        for(int j=0;j<c.length;j+=1) {
-            c[j] = a%10;
-            a=a/10;
+        private static int[] toArray(int a, int size){
+            int[] c = new int[size];
+            for(int j=0;j<c.length;j+=1) {
+                c[j] = a%10;
+                a=a/10;
+            }
+            return c;
         }
-        return c;
-    }
     private static int[] toArrayReverse(int a, int size) {
         int[] c = new int[size];
         for (int j = c.length - 1; j >= 0; j--) {
@@ -126,13 +156,40 @@ public class Ex1 {
     }
 
     public static int[] generateGuess(int numOfDigits) {
-        int[] guess = new int[numOfDigits];
-        for (int i = 0; i < numOfDigits; i++) {
-            guess[i] = i;
-        }
-        return guess;
+
+
+            int[] guess = new int[numOfDigits];
+            for (int i = 0; i < numOfDigits; i++) {
+                guess[i] = i;
+            }
+            return guess;
+
 
     }
+    public static int getRandomExcluding(List<Integer> exclude) {
+        if (exclude == null || exclude.isEmpty()) {
+            throw new IllegalArgumentException("List must not be null or empty.");
+        }
+
+        int randomNum;
+        do {
+            randomNum = (int) (Math.random() * 10);
+        } while (exclude.contains(randomNum));
+
+        return randomNum;
+    }
+    public static int[] DifferentGuess(int[] guess,int numOfDigits)
+    { int[]DiffGuess=new int[numOfDigits];
+        ArrayList <Integer>exclude=new ArrayList<>();
+        for (int i = 0; i <numOfDigits ; i++) {
+            exclude.add(guess[i]);
+        }
+        for (int i = 0; i <numOfDigits ; i++) {
+          DiffGuess[i]=getRandomExcluding(exclude);
+        }
+       return DiffGuess;
+    }
+
 ////////////////////////////////////////////////////
     /**
      * This function solves the Bulls & Cows game automatically.
@@ -144,6 +201,7 @@ public class Ex1 {
         int ind = 1;  // Index of the guess
         int numOfDigits = game.getNumOfDigits();
         double max = Math.pow(10, numOfDigits);
+
         ArrayList<Integer> AllNumbers = new ArrayList<>();
         ArrayList<Integer> toRemove = new ArrayList<>();
         int[] guess = generateGuess(numOfDigits);ArrayList<Integer> SpecialNums=new ArrayList<>();
@@ -156,11 +214,16 @@ public class Ex1 {
             int[] res = game.play(guess); // Playing a round and getting the B,C
             int index=AllNumbers.indexOf(IntFromArray(guess));
             AllNumbers.remove(index);
-            toRemove = NumberRemover(IntFromArray(guess), numOfDigits, res);
 
-            AllNumbers.removeAll(toRemove);
+                toRemove = NumberRemover(IntFromArray(guess), numOfDigits, res);
 
-            if(!AllNumbers.isEmpty()) guess = toArrayReverse(getRandomFromWithPriority(AllNumbers, numOfDigits), numOfDigits);
+                AllNumbers.removeAll(toRemove);
+
+//            int []results=countEliminatedOptions(AllNumbers,numOfDigits);
+                if (!AllNumbers.isEmpty()) guess = toArrayReverse(getRandomFrom(AllNumbers), numOfDigits);
+
+
+
 
             if (game.isRunning()) {
                 System.out.println(ind + ") B: " + res[0] + ",  C: " + res[1]);
@@ -178,6 +241,7 @@ public class Ex1 {
         return ind;
     }
 
+
     private static int IntFromArray(int[] digitArray) {
         String a = "";
         for (int i = 0; i < digitArray.length; i++) {
@@ -193,14 +257,156 @@ public class Ex1 {
         int C = res[1];
         // Conditions for removing elements from AllNumbers
         for (int i = 0; i < max; i++) {
-            if (numOfDigits >= 2 && numOfDigits <= 6) {
-                if ((B + C == 0)&&HasCommonNumbers(i,guess,numOfDigits)
-                        || ((B == 1 && C == 0) && !HasCommonDigits(i, guess, numOfDigits))
-                        || (B == 0 && C == 1 &&!HasCorrectCows(i,guess,numOfDigits))
-                        ||(B+C==numOfDigits&&!AreAnagrams(i,guess,numOfDigits))) {
+            if (numOfDigits == 2) {
+                if ((B + C == 0) && HasCommonNumbers(i, guess, numOfDigits)) {
+                    toRemove.add(i);
+                } else if ((B == 1 && C == 0) && ((SameDigits(i, guess, numOfDigits) != 1))) {
+                    toRemove.add(i);
+                } else if ((B == 0 && C == 1) && ((SameDigits(i, guess, numOfDigits) != 0) || (HowMuchCorrectCows(i, guess, numOfDigits) < 1))) {
+                    toRemove.add(i);
+                } else if ((C == 2) && !AreAnagrams(i, guess, numOfDigits)) {
                     toRemove.add(i);
                 }
+            } else if (numOfDigits == 3) {
+                if ((B + C == 0) && HasCommonNumbers(i, guess, numOfDigits)) {
+                    toRemove.add(i);
+                } else if ((B == 1 && C == 0) && ((SameDigits(i, guess, numOfDigits) != 1))) {
+                    toRemove.add(i);
+                } else if ((B == 0 && C == 1) && ((SameDigits(i, guess, numOfDigits) != 0) || (HowMuchCorrectCows(i, guess, numOfDigits) < 1))) {
+                    toRemove.add(i);
+                } else if (B == 1 && C == 1 && ((SameDigits(i, guess, numOfDigits) != 1) || HowMuchCorrectCows(i, guess, numOfDigits) < 1)) {
+                    toRemove.add(i);
+                } else if ((B == 2 && C == 0) && (SameDigits(i, guess, numOfDigits) != 2)) {
+                    toRemove.add(i);
+                } else if ((B == 0 && C == 2) && ((SameDigits(i, guess, numOfDigits) != 0) || (HowMuchCorrectCows(i, guess, numOfDigits) < 2)))
+                    toRemove.add(i);
+                else if ((C == 3 || (B == 1 && C == 2)) && !AreAnagrams(i, guess, numOfDigits)) {
+                    toRemove.add(i);
 
+                }
+            }
+
+
+            else if (numOfDigits == 4) {
+                if ((B + C == 0) && HasCommonNumbers(i, guess, numOfDigits)) {
+                    toRemove.add(i);
+                } else if ((B == 1 && C == 0) && (SameDigits(i, guess, numOfDigits) != 1)) {
+                    toRemove.add(i);
+                } else if ((B == 0 && C == 1) && ((SameDigits(i, guess, numOfDigits) != 0) || (HowMuchCorrectCows(i, guess, numOfDigits) < 1))) {
+                    toRemove.add(i);
+                } else if (B == 1 && C == 1 && ((SameDigits(i, guess, numOfDigits) != 1) || HowMuchCorrectCows(i, guess, numOfDigits) < 1)) {
+                    toRemove.add(i);
+                } else if ((B == 2 && C == 0) && (SameDigits(i, guess, numOfDigits) != 2)) {
+                    toRemove.add(i);
+                } else if ((B == 0 && C == 2) && ((SameDigits(i, guess, numOfDigits) != 0) || (HowMuchCorrectCows(i, guess, numOfDigits) < 2)))
+                    toRemove.add(i);
+
+                else if ((B == 2 && C == 1) && ((SameDigits(i, guess, numOfDigits) != 2) || HowMuchCorrectCows(i, guess, numOfDigits) < 1)) {
+                    toRemove.add(i);
+                } else if ((B == 1 && C == 2) && ((SameDigits(i, guess, numOfDigits) != 1) || HowMuchCorrectCows(i, guess, numOfDigits) < 2)) {
+                    toRemove.add(i);
+                } else if ((B == 3 && C == 0) && ((SameDigits(i, guess, numOfDigits) != 3))) {
+                    toRemove.add(i);
+                } else if ((B == 0 && C == 3) && ((SameDigits(i, guess, numOfDigits) != 0) || HowMuchCorrectCows(i, guess, numOfDigits) < 3)) {
+                    toRemove.add(i);
+                } else if (((B == 2 && C == 2) || C == 4 || (B == 1 && C == 3)) && !AreAnagrams(i, guess, numOfDigits)) {
+                    toRemove.add(i);
+
+                }
+            }
+
+            else if (numOfDigits == 5) {
+                if ((B + C == 0) && HasCommonNumbers(i, guess, numOfDigits)) {
+                    toRemove.add(i);
+                } else if ((B == 1 && C == 0) && (SameDigits(i, guess, numOfDigits) != 1)) {
+                    toRemove.add(i);
+                } else if ((B == 0 && C == 1) && ((SameDigits(i, guess, numOfDigits) != 0) || (HowMuchCorrectCows(i, guess, numOfDigits) < 1))) {
+                    toRemove.add(i);
+                } else if (B == 1 && C == 1 && ((SameDigits(i, guess, numOfDigits) != 1) || HowMuchCorrectCows(i, guess, numOfDigits) < 1)) {
+                    toRemove.add(i);
+                } else if ((B == 2 && C == 0) && (SameDigits(i, guess, numOfDigits) != 2)) {
+                    toRemove.add(i);
+                } else if ((B == 0 && C == 2) && ((SameDigits(i, guess, numOfDigits) != 0) || (HowMuchCorrectCows(i, guess, numOfDigits) < 2)))
+                    toRemove.add(i);
+
+                else if ((B == 2 && C == 1) && ((SameDigits(i, guess, numOfDigits) != 2) || HowMuchCorrectCows(i, guess, numOfDigits) < 1)) {
+                    toRemove.add(i);
+                } else if ((B == 1 && C == 2) && ((SameDigits(i, guess, numOfDigits) != 1) || HowMuchCorrectCows(i, guess, numOfDigits) < 2)) {
+                    toRemove.add(i);
+                } else if ((B == 3 && C == 0) && ((SameDigits(i, guess, numOfDigits) != 3))) {
+                    toRemove.add(i);
+                } else if ((B == 0 && C == 3) && ((SameDigits(i, guess, numOfDigits) != 0) || HowMuchCorrectCows(i, guess, numOfDigits) < 3)) {
+                    toRemove.add(i);
+                }
+                else if ((B == 0 && C == 4) && ((SameDigits(i, guess, numOfDigits) != 0) || (HowMuchCorrectCows(i, guess, numOfDigits) < 4)))
+                    toRemove.add(i);
+
+                else if ((B == 4 && C == 0) && ((SameDigits(i, guess, numOfDigits) != 4))) {
+                    toRemove.add(i);
+                } else if ((B == 1 && C == 3) && ((SameDigits(i, guess, numOfDigits) != 1) || HowMuchCorrectCows(i, guess, numOfDigits) < 3)) {
+                    toRemove.add(i);
+                } else if ((B == 3 && C == 1) && ((SameDigits(i, guess, numOfDigits) != 3) || HowMuchCorrectCows(i, guess, numOfDigits) < 1)) {
+                    toRemove.add(i);
+                } else if ((B ==2 && C == 2) && ((SameDigits(i, guess, numOfDigits) != 2) || HowMuchCorrectCows(i, guess, numOfDigits) < 2)) {
+                    toRemove.add(i);
+                }
+                else if (((B == 3 && C == 2) ||(B == 2 && C == 3) || C == 5 || (B == 1 && C == 4)) && !AreAnagrams(i, guess, numOfDigits)) {
+                    toRemove.add(i);
+
+                }
+            }
+            else if (numOfDigits == 6) {
+                if ((B + C == 0) && HasCommonNumbers(i, guess, numOfDigits)) {
+                    toRemove.add(i);
+                } else if ((B == 1 && C == 0) && (SameDigits(i, guess, numOfDigits) != 1)) {
+                    toRemove.add(i);
+                } else if ((B == 0 && C == 1) && ((SameDigits(i, guess, numOfDigits) != 0) || (HowMuchCorrectCows(i, guess, numOfDigits) < 1))) {
+                    toRemove.add(i);
+                } else if (B == 1 && C == 1 && ((SameDigits(i, guess, numOfDigits) != 1) || HowMuchCorrectCows(i, guess, numOfDigits) < 1)) {
+                    toRemove.add(i);
+                } else if ((B == 2 && C == 0) && (SameDigits(i, guess, numOfDigits) != 2)) {
+                    toRemove.add(i);
+                } else if ((B == 0 && C == 2) && ((SameDigits(i, guess, numOfDigits) != 0) || (HowMuchCorrectCows(i, guess, numOfDigits) < 2)))
+                    toRemove.add(i);
+
+                else if ((B == 2 && C == 1) && ((SameDigits(i, guess, numOfDigits) != 2) || HowMuchCorrectCows(i, guess, numOfDigits) < 1)) {
+                    toRemove.add(i);
+                } else if ((B == 1 && C == 2) && ((SameDigits(i, guess, numOfDigits) != 1) || HowMuchCorrectCows(i, guess, numOfDigits) < 2)) {
+                    toRemove.add(i);
+                } else if ((B == 3 && C == 0) && ((SameDigits(i, guess, numOfDigits) != 3))) {
+                    toRemove.add(i);
+                } else if ((B == 0 && C == 3) && ((SameDigits(i, guess, numOfDigits) != 0) || HowMuchCorrectCows(i, guess, numOfDigits) < 3)) {
+                    toRemove.add(i);
+                }
+                else if ((B == 0 && C == 4) && ((SameDigits(i, guess, numOfDigits) != 0) || (HowMuchCorrectCows(i, guess, numOfDigits) < 4)))
+                    toRemove.add(i);
+
+                else if ((B == 4 && C == 0) && ((SameDigits(i, guess, numOfDigits) != 4))) {
+                    toRemove.add(i);
+                } else if ((B == 1 && C == 3) && ((SameDigits(i, guess, numOfDigits) != 1) || HowMuchCorrectCows(i, guess, numOfDigits) < 3)) {
+                    toRemove.add(i);
+                } else if ((B == 3 && C == 1) && ((SameDigits(i, guess, numOfDigits) != 3) || HowMuchCorrectCows(i, guess, numOfDigits) < 1)) {
+                    toRemove.add(i);
+                } else if ((B ==2 && C == 2) && ((SameDigits(i, guess, numOfDigits) != 2) || HowMuchCorrectCows(i, guess, numOfDigits) < 2)) {
+                    toRemove.add(i);
+                }
+                else if ((B ==0 && C == 5) && ((SameDigits(i, guess, numOfDigits) != 0) || HowMuchCorrectCows(i, guess, numOfDigits) < 5)) {
+                    toRemove.add(i);
+                } else if ((B ==1 && C == 4) && ((SameDigits(i, guess, numOfDigits) != 1) || HowMuchCorrectCows(i, guess, numOfDigits) < 4)) {
+                    toRemove.add(i);
+                } else if ((B ==2 && C == 3) && ((SameDigits(i, guess, numOfDigits) != 2) || HowMuchCorrectCows(i, guess, numOfDigits) < 3)) {
+                    toRemove.add(i);
+                } else if ((B ==3 && C == 2) && ((SameDigits(i, guess, numOfDigits) != 3) || HowMuchCorrectCows(i, guess, numOfDigits) < 2)) {
+                    toRemove.add(i);
+                } else if ((B ==5 && C == 0) && ((SameDigits(i, guess, numOfDigits) != 5))) {
+                    toRemove.add(i);
+                } else if ((B ==4 && C == 1) && ((SameDigits(i, guess, numOfDigits) != 4) || HowMuchCorrectCows(i, guess, numOfDigits) < 1)) {
+                    toRemove.add(i);
+                }
+                else if (((B == 3 && C == 3) ||(B == 2 && C == 3) || C == 6 || (B == 1 && C == 5)||(B==2&&C==4)||(B==4&&C==2) && !AreAnagrams(i, guess, numOfDigits))) {
+                    toRemove.add(i);
+
+                }
             }
         }
 
@@ -224,134 +430,71 @@ public class Ex1 {
         }
         return true;
     }
-    private static int countEliminatedOptions(int[] guess, int guessNum, int outcome, ArrayList<Integer> options, int numOfDigits) {
-        int eliminated = 0;
-
-        for (int option : options) {
-            int[] optionArray = toArray(option, numOfDigits);
-            int[] simulatedRes = simulateGuess(guess, optionArray);
-            int simulatedOutcome = getOutcomeFromResult(simulatedRes, numOfDigits);
-
-            if (simulatedOutcome != outcome) {
-                eliminated++;
-            }
-        }
-
-        return eliminated;
-    }
-    private static int getOutcomeFromResult(int[] result, int numOfDigits) {
-        int B = result[0];
-        int C = result[1];
-
+//        private static int [] countEliminatedOptions( ArrayList<Integer> options, int numOfDigits) {
+//
+//            int [] outcomes = getOutcome(numOfDigits);
+//            int [] results= new int[options.size()];
+//            Arrays.fill(results,0);
+//            for (int option : options) {
+//                int minEliminated = 9999999;
+//
+//
+//                for (int i = 0; i < outcomes.length; i++) {
+//                    ArrayList<Integer> temp = new ArrayList<>(options);
+//                    ArrayList<Integer> toRemove;
+//                    toRemove = NumberRemover(option, numOfDigits, toArray(outcomes[i], 2));
+//                    int eliminated = temp.size() - toRemove.size();
+//                    if (eliminated < minEliminated) minEliminated = eliminated;
+//
+//                }
+//                results[option]=minEliminated;
+//
+//
+//                }
+//
+//
+//            return results;
+//        }
+    private static int[] getOutcome(int numOfDigits) {
         if (numOfDigits == 2) {
-            int[] mapping = {20, 10, 01, 00, 02}; // Map desired outcomes to encoded outcomes
-            int desiredOutcome = B * 10 + C;
-            for (int i = 0; i < mapping.length; i++) {
-                if (mapping[i] == desiredOutcome) {
-                    return i;
-                }
-            }
+            return new int[]{20, 10, 01, 00, 02};
         } else if (numOfDigits == 3) {
-            int[] mapping = {30, 20, 00, 01, 02, 03, 10, 12, 11}; // Map desired outcomes to encoded outcomes
-            int desiredOutcome = B * 10 + C;
-            for (int i = 0; i < mapping.length; i++) {
-                if (mapping[i] == desiredOutcome) {
-                    return i;
-                }
-            }
+            return new int[]{30, 20, 00, 01, 02, 03, 10, 12, 11};
         } else if (numOfDigits == 4) {
-            int[] mapping = {40, 30, 20, 21, 22, 00, 01, 02, 03, 04, 10, 20, 12, 13}; // Map desired outcomes to encoded outcomes
-            int desiredOutcome = B * 10 + C;
-            for (int i = 0; i < mapping.length; i++) {
-                if (mapping[i] == desiredOutcome) {
-                    return i;
-                }
-            }
+            return new int[]{40, 30, 20, 21, 22, 00, 01, 02, 03, 04, 10, 20, 12, 13};
         } else if (numOfDigits == 5) {
-            int[] mapping = {00, 01, 02, 03, 04, 05, 10, 11, 12, 13, 14, 20, 21, 22, 23, 30, 31, 32, 40, 50}; // Map desired outcomes to encoded outcomes
-            int desiredOutcome = B * 10 + C;
-            for (int i = 0; i < mapping.length; i++) {
-                if (mapping[i] == desiredOutcome) {
-                    return i;
-                }
-            }
+            return new int[]{00, 01, 02, 03, 04, 05, 10, 11, 12, 13, 14, 20, 21, 22, 23, 30, 31, 32, 40, 50};
         } else if (numOfDigits == 6) {
-            int[] mapping = {00, 01, 02, 03, 04, 05, 10, 11, 12, 13, 14, 20, 21, 22, 23, 30, 31, 32, 40, 50, 41, 42, 33, 24, 15, 06, 60};
-            int desiredOutcome = B * 10 + C;
-            for (int i = 0; i < mapping.length; i++) {
-                if (mapping[i] == desiredOutcome) {
-                    return i;
-                }
-            }
+            return new int[]{00, 01, 02, 03, 04, 05, 10, 11, 12, 13, 14, 20, 21, 22, 23, 30, 31, 32, 40, 50, 41, 42, 33, 24, 15, 06, 60};
+        } else {
+            return new int[]{0, 1}; // Default or handle other cases as needed
         }
-
-        return -1;
-
-
-    }
-    public static int MinEliminations(int[] guess, int numOfDigits, ArrayList<Integer> AllNumbers) {
-        int minEliminated = Integer.MAX_VALUE;
-        int bestOutcome = -1;
-        int AllOutcomes;
-        if (numOfDigits == 2) AllOutcomes = 5;
-        if (numOfDigits == 3) AllOutcomes = 9;
-        if (numOfDigits == 4) AllOutcomes = 14;
-        if (numOfDigits == 5) AllOutcomes = 20;
-        if (numOfDigits == 6) AllOutcomes = 27;
-        else {
-            AllOutcomes = 1;
-        }
-        ;
-
-
-        for (int outcome = 0; outcome < AllOutcomes; outcome++) {
-            int eliminated = countEliminatedOptions(guess, IntFromArray(guess), outcome, AllNumbers, numOfDigits);
-            if (eliminated < minEliminated) {
-                minEliminated = eliminated;
-                bestOutcome = outcome;
-            }
-        }
-        return minEliminated;
-
     }
 
     // Helper function to simulate a guess and get the result
-    private static int[] simulateGuess(int[] guess, int[] option) {
-        int B = 0, C = 0;
 
-        for (int i = 0; i < guess.length; i++) {
-            if (guess[i] == option[i]) {
-                B++;
-            } else if (containsDigit(option, guess[i])) {
-                C++;
-            }
+
+    public static int getRandomFrom(ArrayList<Integer> Nums) {
+        if (Nums == null || Nums.isEmpty()) {
+            throw new IllegalArgumentException("List must not be null or empty.");
         }
 
-        return new int[]{B, C};
+        int randomInd = (int) (Math.random() * Nums.size());
+        int randomNum = Nums.get(randomInd);
+
+        // Ensure that the generated number has distinct digits
+
+
+        return randomNum;
     }
-    private static boolean containsDigit(int[] array, int digit) {
-        for (int num : array) {
-            if (num == digit) {
-                return true;
-            }
-        }
-        return false;
-    }
-    public static int getRandomFromWithPriority(ArrayList<Integer> nums, int numOfDigits) {
+    public static int getRandomFromWithPriority(ArrayList<Integer> nums, int numOfDigits,int [] priorities) {
         if (nums == null || nums.isEmpty()) {
             return -1;
         }
         double max=Math.pow(10,numOfDigits);
-        int[] priorities = new int[(int) max];
-        ArrayList<Integer> AllNumbers2=new ArrayList<>();
-        for (int i = 0; i <max; i++) {
-            AllNumbers2.add(i);
 
-        }
 
-        for (int i = 0; i < max; i++) {
-            priorities[i] = MinEliminations(toArray(i, numOfDigits), numOfDigits, AllNumbers2);
-        }
+
 
         // Find the maximum priority value
         int maxPriority = Integer.MIN_VALUE;
@@ -389,35 +532,47 @@ public class Ex1 {
         return nums.get((int) (Math.random() * nums.size()));
     }
 
-    private static boolean HasCorrectCows(int num1, int num2, int numOfDigits) {
+    private static int HowMuchCorrectCows(int num1, int num2, int numOfDigits) {
         int count = 0;
-        int[] number1=toArray(num1,numOfDigits);
-        int[] number2=toArray(num2,numOfDigits);
-        for (int i = 0; i <numOfDigits ; i++) {
+        int[] number1 = toArray(num1, numOfDigits);
+        int[] number2 = toArray(num2, numOfDigits);
+        boolean[] counted = new boolean[numOfDigits];
+
+        for (int i = 0; i < numOfDigits; i++) {
             for (int j = 0; j < numOfDigits; j++) {
-                if(i==j&& number1[i] == number2[j])return false;
-                if (i != j && number1[i] == number2[j])count++;
+                if ((i != j && number1[i] == number2[j]) && !counted[j]) {
+                    count++;
+                    counted[j] = true;
+                    break;
+                }
             }
         }
-        return count>=1;
 
+        return count;
     }
     public static boolean AreAnagrams(int num1, int num2, int numOfDigits) {
-        int[] colors1 = new int[10];
-        int[] colors2 = new int[10];
-
-        // Initialize arrays
-        Arrays.fill(colors1, 0);
-        Arrays.fill(colors2, 0);
+        int[] digitCount = new int[10];
 
         // Count occurrences of each digit in num1
         for (int i = 0; i < numOfDigits; i++) {
-            colors1[num1%10]++;
-            colors2[num2%10]++;
+            digitCount[num1 % 10]++;
+            num1 /= 10;
         }
 
-        // Compare arrays
-        return Arrays.equals(colors1, colors2);
+        // Subtract occurrences of each digit in num2
+        for (int i = 0; i < numOfDigits; i++) {
+            digitCount[num2 % 10]--;
+            num2 /= 10;
+        }
+
+        // If all counts are zero, the numbers are anagrams
+        for (int count : digitCount) {
+            if (count != 0) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     public static boolean HasCommonNumbers(int num1, int num2, int numOfDigits) {
